@@ -1,0 +1,17 @@
+{
+  "vanilla": {
+    "version": "latest:release",
+    "port": 25565,
+    "seed": 12345
+  },
+  "snapshot": {
+    "version": "latest:snapshot",
+    "port": 25566,
+    "seed": 67890
+  },
+  "legacy": {
+    "version": "1.6.4",
+    "port": 25567,
+    "seed": 424242
+  }
+}
