@@ -1,25 +1,45 @@
 {
-  "vanilla": {
+  "default": {
     "version": "latest:release",
+    "eula": true,
     "properties": {
-      "level-seed": "12345",
-      "server-port": "25565",
-      "motd": "Vanilla Minecraft Server"
-    }
+	"difficulty": "normal",
+	"allow-flight": true,
+	"enable-command-block": true,
+	"white-list": true,
+        "motd": "\u00a7dA Cool Minecraft Server"
+    },
+    "whitelist": ["SylvanSerenity", "awesomeis9"],
+    "ops": ["SylvanSerenity"],
+    "banned_players": ["Notch"],
+    "banned_ips": ["1.1.1.1"]
   },
-  "snapshot": {
-    "version": "latest:snapshot",
-    "properties": {
-      "level-seed": "67890",
-      "server-port": "25566",
-      "online-mode": "false"
+  "servers": [
+    {
+      "id": "vanilla",
+      "version": "latest:release",
+      "properties": {
+        "level-seed": "12345",
+        "server-port": "25565",
+        "motd": "\u00a7bVanilla Minecraft Server"
+      }
+    },
+    {
+      "id": "snapshot",
+      "version": "latest:snapshot",
+      "properties": {
+        "level-seed": "67890",
+        "server-port": "25566",
+        "motd": "\u00a7eSnapshot Minecraft Server"
+      }
+    },
+    {
+      "id": "legacy",
+      "version": "1.6.4",
+      "properties": {
+        "level-seed": "ethoslab",
+        "server-port": "25567"
+      }
     }
-  },
-  "legacy": {
-    "version": "1.6.4",
-    "properties": {
-      "level-seed": "ethoslab",
-      "server-port": "25567"
-    }
-  }
+  ]
 }
