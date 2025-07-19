@@ -77,12 +77,17 @@ def main():
 	config = read_config()
 	manifest = fetch_json(MANIFEST_URL)
 
-	for server_id, server_config in config.items():
-		print(f"\nInstalling {server_id}...")
-		try:
-			install_server(server_id, server_config, manifest)
-		except Exception as e:
-			print(f"Failed to install {server_id}: {e}")
+	with concurrent.futures.ThreadPoolExecutor() as executor:
+		futures = {
+			executor.submit(install_server, server_id, server_config, manifest): server_id
+			for server_id, server_config in config.items()
+		}
+		for future in concurrent.futures.as_completed(futures):
+			try:
+				future.result()
+			except Exception as e:
+				server_id = futures[future]
+				print(f"Failed to install {server_id}: {e}")
 
 if __name__ == "__main__":
 	main()
