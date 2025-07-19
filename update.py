@@ -115,7 +115,7 @@ def save_json_file(path, data):
 	with open(path, "w") as f:
 		json.dump(data, f, indent=2)
 
-def write_eula(server_dir, accepted):
+def update_eula(server_dir, accepted):
 	eula_path = os.path.join(server_dir, "eula.txt")
 	current = None
 	if os.path.exists(eula_path):
@@ -131,7 +131,7 @@ def write_eula(server_dir, accepted):
 	else:
 		print("✅ eula.txt already matches")
 
-def write_whitelist(server_dir, usernames):
+def update_whitelist(server_dir, usernames):
 	if not usernames:
 		return
 	path = os.path.join(server_dir, "whitelist.json")
@@ -152,7 +152,7 @@ def write_whitelist(server_dir, usernames):
 	else:
 		print("✅ whitelist.json already matches")
 
-def write_ops(server_dir, usernames):
+def update_ops(server_dir, usernames):
 	if not usernames:
 		return
 	path = os.path.join(server_dir, "ops.json")
@@ -175,7 +175,7 @@ def write_ops(server_dir, usernames):
 	else:
 		print("✅ ops.json already matches")
 
-def write_banned_players(server_dir, usernames):
+def update_banned_players(server_dir, usernames):
 	if not usernames:
 		return
 	path = os.path.join(server_dir, "banned-players.json")
@@ -200,7 +200,7 @@ def write_banned_players(server_dir, usernames):
 	else:
 		print("✅ whitelist.json already matches")
 
-def write_banned_ips(server_dir, ips):
+def update_banned_ips(server_dir, ips):
 	if not ips:
 		return
 	path = os.path.join(server_dir, "banned-ips.json")
@@ -226,28 +226,34 @@ def write_banned_ips(server_dir, ips):
 
 def install_server(server_id, server_config, manifest):
 	print(f"Installing {server_id}...")
-	version_str = server_config["version"]
-	version_id = resolve_version_id(version_str, manifest)
-	version_meta = find_version_meta(version_id, manifest)
-	version_json = fetch_json(version_meta["url"])
-
-	server_dl = version_json.get("downloads", {}).get("server")
-	if not server_dl:
-		print(f"No server JAR found for {version_id}")
-		return
 
 	server_dir = os.path.join(BASE_DIR, server_id)
-	jar_path = os.path.join(server_dir, "server.jar")
-	update_server(jar_path, server_dl, server_id, version_id)
+	if not os.path.exists(server_dir):
+		os.makedirs(server_dir)
 
-	props = server_config.get("properties", {})
-	update_server_properties(server_id, server_dir, props)
+	version_str = server_config["version"]
+	version_id = version_str
+	if version_str == "custom" or server_config.get("skip_download"):
+		print(f"⚙️ Skipping server.jar download for {server_id} (custom)")
+	else:
+		version_id = resolve_version_id(version_str, manifest)
+		version_meta = find_version_meta(version_id, manifest)
+		version_json = fetch_json(version_meta["url"])
 
-	write_eula(server_dir, server_config.get("eula", True))
-	write_whitelist(server_dir, server_config.get("whitelist", []))
-	write_ops(server_dir, server_config.get("ops", []))
-	write_banned_players(server_dir, server_config.get("banned_players", []))
-	write_banned_ips(server_dir, server_config.get("banned_ips", []))
+		server_dl = version_json.get("downloads", {}).get("server")
+		if not server_dl:
+			print(f"No server JAR found for {version_id}")
+			return
+
+		jar_path = os.path.join(server_dir, "server.jar")
+		update_server(jar_path, server_dl, server_id, version_id)
+
+	update_server_properties(server_id, server_dir, server_config.get("properties", {}))
+	update_eula(server_dir, server_config.get("eula", True))
+	update_whitelist(server_dir, server_config.get("whitelist", []))
+	update_ops(server_dir, server_config.get("ops", []))
+	update_banned_players(server_dir, server_config.get("banned_players", []))
+	update_banned_ips(server_dir, server_config.get("banned_ips", []))
 
 	print(f"Installed {server_id} ({version_id})")
 

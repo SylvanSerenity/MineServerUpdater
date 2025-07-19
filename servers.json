@@ -40,6 +40,14 @@
         "level-seed": "ethoslab",
         "server-port": "25567"
       }
+    },
+    {
+      "id": "modded",
+      "version": "custom",
+      "properties": {
+        "level-seed": "toomanymods",
+        "server-port": "25568"
+      }
     }
   ]
 }
