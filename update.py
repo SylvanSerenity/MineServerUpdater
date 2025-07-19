@@ -10,6 +10,7 @@ CONFIG_FILE = "servers.json"
 BASE_DIR = os.path.abspath("minecraft_servers")
 MANIFEST_URL = "https://piston-meta.mojang.com/mc/game/version_manifest.json"
 USERNAME_URL = "https://api.mojang.com/users/profiles/minecraft/"
+ICON_FILE = "server-icon.png"
 
 def read_config():
 	with open(CONFIG_FILE) as f:
@@ -254,6 +255,14 @@ def install_server(server_id, server_config, manifest):
 	update_ops(server_dir, server_config.get("ops", []))
 	update_banned_players(server_dir, server_config.get("banned_players", []))
 	update_banned_ips(server_dir, server_config.get("banned_ips", []))
+
+	icon_path = os.path.join(server_dir, ICON_FILE)
+	if os.path.exists(ICON_FILE):
+		if os.path.exists(icon_path) and (sha1sum(ICON_FILE) == sha1sum(icon_path)):
+			print("✅ Server icon already matches")
+		else:
+			shutil.copyfile(ICON_FILE, icon_path)
+			print("🖼️ Updated server icon")
 
 	print(f"Installed {server_id} ({version_id})")
 
