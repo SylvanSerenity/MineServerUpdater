@@ -3,6 +3,7 @@ import json
 import requests
 import hashlib
 from tqdm import tqdm
+import concurrent.futures
 
 CONFIG_FILE = "servers.json"
 BASE_DIR = os.path.abspath("minecraft_servers")
@@ -35,6 +36,7 @@ def find_version_meta(version_id, manifest):
 	raise ValueError(f"Version {version_id} not found in manifest")
 
 def install_server(server_id, server_config, manifest):
+	print(f"\nInstalling {server_id}...")
 	version_str = server_config["version"]
 	version_id = resolve_version_id(version_str, manifest)
 	version_meta = find_version_meta(version_id, manifest)
@@ -47,7 +49,14 @@ def install_server(server_id, server_config, manifest):
 
 	server_dir = os.path.join(BASE_DIR, server_id)
 	jar_path = os.path.join(server_dir, "server.jar")
+	update_server(jar_path, server_dl, server_id, version_id)
 
+	props = server_config.get("properties", {})
+	update_server_properties(server_id, server_dir, props)
+
+	print(f"Installed {server_id} ({version_id})")
+
+def update_server(jar_path, server_dl, server_id, version_id):
 	# Compare SHA1 if file exists
 	if os.path.exists(jar_path):
 		local_sha = sha1sum(jar_path)
@@ -56,13 +65,13 @@ def install_server(server_id, server_config, manifest):
 			return
 		else:
 			print(f"🔁 {server_id} outdated. Updating server.jar...")
+	else:
+		print(f"🔁 {server_id} does not exist. Downloading server.jar...")
 
-	dl_url = server_dl["url"]
-	print(f"Downloading server v{version_str} from: {dl_url}")
-	download_file(dl_url, jar_path)
-	print(f"Installed {server_id} ({version_id})")
+	download_file(version_id, server_dl["url"], jar_path)
 
-def download_file(url, dest):
+def download_file(version_id, url, dest):
+	print(f"Downloading server v{version_id} from: {url}")
 	os.makedirs(os.path.dirname(dest), exist_ok=True)
 	r = requests.get(url, stream=True)
 	total = int(r.headers.get("content-length", 0))
@@ -72,6 +81,34 @@ def download_file(url, dest):
 		for chunk in r.iter_content(chunk_size=8192):
 			f.write(chunk)
 			bar.update(len(chunk))
+
+def update_server_properties(server_id, server_dir, new_props):
+	props_path = os.path.join(server_dir, "server.properties")
+	props = {}
+
+	# Load existing if it exists
+	if os.path.exists(props_path):
+		with open(props_path, "r") as f:
+			for line in f:
+				line = line.strip()
+				if not line or line.startswith("#") or "=" not in line:
+					continue
+				key, value = line.split("=", 1)
+				props[key.strip()] = value.strip()
+
+	changed = False
+	for key, val in new_props.items():
+		if props.get(key) != str(val):
+			props[key] = str(val)
+			changed = True
+
+	if changed or not os.path.exists(props_path):
+		with open(props_path, "w") as f:
+			for k, v in sorted(props.items()):
+				f.write(f"{k}={v}\n")
+		print(f"📝 Updated server.properties for {server_id}")
+	else:
+		print(f"✅ server.properties for {server_id} already up to date")
 
 def main():
 	config = read_config()

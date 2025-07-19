@@ -1,17 +1,25 @@
 {
   "vanilla": {
     "version": "latest:release",
-    "port": 25565,
-    "seed": 12345
+    "properties": {
+      "level-seed": "12345",
+      "server-port": "25565",
+      "motd": "Vanilla Minecraft Server"
+    }
   },
   "snapshot": {
     "version": "latest:snapshot",
-    "port": 25566,
-    "seed": 67890
+    "properties": {
+      "level-seed": "67890",
+      "server-port": "25566",
+      "online-mode": "false"
+    }
   },
   "legacy": {
     "version": "1.6.4",
-    "port": 25567,
-    "seed": 424242
+    "properties": {
+      "level-seed": "ethoslab",
+      "server-port": "25567"
+    }
   }
 }
