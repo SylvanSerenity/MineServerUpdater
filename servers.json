@@ -1,4 +1,5 @@
 {
+  "install_dir": "minecraft-servers",
   "default": {
     "version": "latest:release",
     "eula": true,

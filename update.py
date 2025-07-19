@@ -5,9 +5,10 @@ import hashlib
 from tqdm import tqdm
 import concurrent.futures
 from copy import deepcopy
+import shutil
 
 CONFIG_FILE = "servers.json"
-BASE_DIR = os.path.abspath("minecraft_servers")
+INSTALL_DIR = os.path.abspath("minecraft-servers")
 MANIFEST_URL = "https://piston-meta.mojang.com/mc/game/version_manifest.json"
 USERNAME_URL = "https://api.mojang.com/users/profiles/minecraft/"
 ICON_FILE = "server-icon.png"
@@ -228,7 +229,7 @@ def update_banned_ips(server_dir, ips):
 def install_server(server_id, server_config, manifest):
 	print(f"Installing {server_id}...")
 
-	server_dir = os.path.join(BASE_DIR, server_id)
+	server_dir = os.path.join(INSTALL_DIR, server_id)
 	if not os.path.exists(server_dir):
 		os.makedirs(server_dir)
 
@@ -278,9 +279,11 @@ def apply_defaults(server_cfg, defaults):
 	return cfg
 
 def main():
+	global INSTALL_DIR
 	full_cfg = read_config()
 	defaults = full_cfg.get("default", {})
 	manifest = fetch_json(MANIFEST_URL)
+	INSTALL_DIR = os.path.abspath(full_cfg["install_dir"])
 
 	with concurrent.futures.ThreadPoolExecutor() as executor:
 		futures = []
