@@ -259,7 +259,7 @@ def install_server(server_id, server_config, manifest):
 
 	icon_path = os.path.join(server_dir, ICON_FILE)
 	if os.path.exists(ICON_FILE):
-		if os.path.exists(icon_path) and (sha1sum(ICON_FILE) == sha1sum(icon_path)):
+		if os.path.exists(icon_path):
 			print("✅ Server icon already matches")
 		else:
 			shutil.copyfile(ICON_FILE, icon_path)
