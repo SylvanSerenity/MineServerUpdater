@@ -53,6 +53,10 @@ MineServerUpdater is a Minecraft server manager and updater that allows you to s
 
 1. **Configure the `servers.json` file for your servers.** See [Configuration](#configuration) for configuration specification.
 
+    ```sh
+    nano server.json
+    ```
+
     ---
 
 2. **Run the `update.py` script to install/update all servers to match your configuration specified in `servers.json`.**
