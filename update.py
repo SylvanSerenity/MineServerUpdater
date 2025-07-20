@@ -65,34 +65,6 @@ def download_file(version_id, url, dest):
 			f.write(chunk)
 			bar.update(len(chunk))
 
-def update_server_properties(server_id, server_dir, new_props):
-	props_path = os.path.join(server_dir, "server.properties")
-	props = {}
-
-	# Load existing if it exists
-	if os.path.exists(props_path):
-		with open(props_path, "r") as f:
-			for line in f:
-				line = line.strip()
-				if not line or line.startswith("#") or "=" not in line:
-					continue
-				key, value = line.split("=", 1)
-				props[key.strip()] = value.strip()
-
-	changed = False
-	for key, val in new_props.items():
-		if props.get(key) != str(val):
-			props[key] = str(val)
-			changed = True
-
-	if changed or not os.path.exists(props_path):
-		with open(props_path, "w") as f:
-			for k, v in sorted(props.items()):
-				f.write(f"{k}={v}\n")
-		print(f"📝 Updated server.properties for {server_id}")
-	else:
-		print(f"✅ server.properties for {server_id} already up to date")
-
 def resolve_uuid(username):
 	url = USERNAME_URL + username
 	resp = requests.get(url)
@@ -131,7 +103,36 @@ def update_eula(server_dir, accepted):
 			f.write(f"eula={'true' if accepted else 'false'}\n")
 			print("📜 Wrote eula.txt")
 	else:
-		print("✅ eula.txt already matches")
+		print("✅ eula.txt already exists")
+
+
+def update_server_properties(server_id, server_dir, new_props):
+	props_path = os.path.join(server_dir, "server.properties")
+	props = {}
+
+	# Load existing if it exists
+	if os.path.exists(props_path):
+		with open(props_path, "r") as f:
+			for line in f:
+				line = line.strip()
+				if not line or line.startswith("#") or "=" not in line:
+					continue
+				key, value = line.split("=", 1)
+				props[key.strip()] = value.strip()
+
+	changed = False
+	for key, val in new_props.items():
+		if props.get(key) != str(val):
+			props[key] = str(val)
+			changed = True
+
+	if changed or not os.path.exists(props_path):
+		with open(props_path, "w") as f:
+			for k, v in sorted(props.items()):
+				f.write(f"{k}={v}\n")
+		print(f"📝 Updated server.properties for {server_id}")
+	else:
+		print(f"✅ server.properties for {server_id} already up to date")
 
 def update_whitelist(server_dir, usernames):
 	if not usernames:
