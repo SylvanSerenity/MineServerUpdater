@@ -7,48 +7,13 @@
         "difficulty": "normal",
         "allow-flight": true,
         "enable-command-block": true,
-        "white-list": true,
-        "motd": "\u00a7dA Cool Minecraft Server"
-    },
-    "whitelist": ["SylvanSerenity", "awesomeis9"],
-    "ops": ["SylvanSerenity"],
-    "banned_players": ["Notch"],
-    "banned_ips": ["1.1.1.1"]
+        "motd": "\u00a7dA Cool Minecraft Server",
+	"max-players": 50
+    }
   },
   "servers": [
     {
-      "id": "vanilla",
-      "version": "latest:release",
-      "properties": {
-        "level-seed": "12345",
-        "server-port": "25565",
-        "motd": "\u00a7bVanilla Minecraft Server"
-      }
-    },
-    {
-      "id": "snapshot",
-      "version": "latest:snapshot",
-      "properties": {
-        "level-seed": "67890",
-        "server-port": "25566",
-        "motd": "\u00a7eSnapshot Minecraft Server"
-      }
-    },
-    {
-      "id": "legacy",
-      "version": "1.6.4",
-      "properties": {
-        "level-seed": "ethoslab",
-        "server-port": "25567"
-      }
-    },
-    {
-      "id": "modded",
-      "version": "custom",
-      "properties": {
-        "level-seed": "toomanymods",
-        "server-port": "25568"
-      }
+      "id": "vanilla"
     }
   ]
 }

@@ -53,13 +53,13 @@ def update_server(jar_path, server_dl, server_id, version_id):
 
 	download_file(version_id, server_dl["url"], jar_path)
 
-def download_file(version_id, url, dest):
+def download_file(version_id, url, dst):
 	print(f"Downloading server v{version_id} from: {url}")
-	os.makedirs(os.path.dirname(dest), exist_ok=True)
+	os.makedirs(os.path.dirname(dst), exist_ok=True)
 	r = requests.get(url, stream=True)
 	total = int(r.headers.get("content-length", 0))
-	with open(dest, "wb") as f, tqdm(
-		total=total, unit='B', unit_scale=True, desc=os.path.basename(dest)
+	with open(dst, "wb") as f, tqdm(
+		total=total, unit='B', unit_scale=True, desc=os.path.basename(dst)
 	) as bar:
 		for chunk in r.iter_content(chunk_size=8192):
 			f.write(chunk)
@@ -235,6 +235,49 @@ def update_server_icon(server_dir):
 			shutil.copyfile(ICON_FILE, icon_path)
 			print("🖼️ Updated server icon")
 
+def update_server_cfg(server_dir, config):
+	path = os.path.join(server_dir, "server.cfg")
+	current = {}
+
+	# Read existing file
+	if os.path.exists(path):
+		with open(path) as f:
+			for line in f:
+				if line.strip().startswith("#") or "=" not in line:
+					continue
+				key, val = line.strip().split("=", 1)
+				current[key.strip()] = val.strip()
+
+	updated = False
+	for key in ("xms", "xmx", "stop"):
+		if key in config and str(config[key]) != current.get(key):
+			current[key] = str(config[key])
+			updated = True
+
+	if updated or not os.path.exists(path):
+		with open(path, "w") as f:
+			f.write("# The initial heap memory size for the JVM running the server.\n")
+			f.write(f"xms={current.get('xms', '1G')}\n\n")
+			f.write("# The maximum heap memory size for the JVM running the server.\n")
+			f.write(f"xmx={current.get('xmx', '6G')}\n\n")
+			f.write("# Set this to \"true\" to tell the server manager to not (re)start the server until\n")
+			f.write("# you set it back to \"false\". Otherwise, it will continuously restart when closed.\n")
+			f.write(f"stop={current.get('stop', 'false')}\n")
+		print("🛠️  Updated server.cfg")
+	else:
+		print("✅ server.cfg already up to date")
+
+def copy_server_manager_script(server_dir):
+	dst = os.path.join(server_dir, "server_manager.sh")
+	if not os.path.exists("server_manager.sh"):
+		print("⚠️ Missing server_manager.sh")
+		return
+	if not os.path.exists(dst):
+		shutil.copy("server_manager.sh", dst)
+		os.chmod(dst, 0o755) # Make executable
+		print("📂 Copied server_manager.sh")
+	else:
+		print("✅ server_manager.sh already present")
 
 def install_server(server_id, server_config, manifest):
 	print(f"Installing {server_id}...")
@@ -267,6 +310,8 @@ def install_server(server_id, server_config, manifest):
 	update_banned_players(server_dir, server_config.get("banned_players", []))
 	update_banned_ips(server_dir, server_config.get("banned_ips", []))
 	update_server_icon(server_dir)
+	update_server_cfg(server_dir, server_config.get("server_config", {}))
+	copy_server_manager_script(server_dir)
 
 	print(f"Installed {server_id} ({version_id})")
 
