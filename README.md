@@ -69,6 +69,21 @@ MineServerUpdater is a Minecraft server manager and updater that allows you to s
     ./server_manager.sh
     ```
 
+4. To automatically update the server information, consider making a cron task:
+
+    ```sh
+    chmod +x update.sh
+    crontab -e
+    ```
+
+    Add an update task with your preferred schedule. This one updates the servers every day at 03:00 in the morning.
+
+    ```txt
+    0 3 * * * /home/minecraft/MineServerUpdater/update.sh >> /home/minecraft/MineServerUpdater/log.log >> 2>&1
+    ```
+
+    ***Note:** Replace `/home/minecraft/` with the absolute path of the `MineServerUpdater` directory.*
+
 ## Configuration
 
 The `servers.json` configuration file for your servers is what defines how your servers behave whenever the `update.py` script is run. See below for specification of each object.
