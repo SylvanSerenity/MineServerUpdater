@@ -431,13 +431,11 @@ You can have your Minecraft servers start on boot by creating a service that run
     After=network.target
 
     [Service]
-    Type=simple
+    Type=oneshot
+    RemainAfterExit=true
     User=minecraft
     WorkingDirectory=/home/minecraft/%i
-    ExecStart=/home/minecraft/%i/server_manager.sh
-    Restart=on-failure
-    RestartSec=10
-    StandardInput=tty
+    ExecStart=/usr/bin/screen -S %i -dm /home/minecraft/%i/server_manager.sh
 
     [Install]
     WantedBy=multi-user.target
@@ -456,3 +454,31 @@ You can have your Minecraft servers start on boot by creating a service that run
     ```
 
     ***Note:** Replace `my-server` with the `id` of your server defined in `servers.json`. Do this step for each server you want to start on boot.*
+
+    ***Note:** Make sure your server jar file is named `server.jar`.*
+
+    ---
+
+5. **Check the status of the service:**
+
+   ```sh
+   sudo systemctl status minecraft@my-server
+   ```
+
+   To prevent it from starting at boot:
+
+   ```sh
+   sudo systemctl disable minecraft@my-server
+   ```
+
+    ---
+
+6. **Attach to the screen session:**
+
+   ```sh
+   screen -r my-server
+   ```
+
+   ***Note:** Replace `my-server` with your server `id` defined in the `servers.json` file.*
+
+   ***Note:** Use `CTRL+A, D` to detach from the screen session.*
