@@ -225,6 +225,15 @@ def update_banned_ips(server_dir, ips):
 	else:
 		print("✅ whitelist.json already matches")
 
+def update_server_icon(server_dir):
+	icon_path = os.path.join(server_dir, ICON_FILE)
+	if os.path.exists(ICON_FILE):
+		if os.path.exists(icon_path):
+			print("✅ Server icon already matches")
+		else:
+			shutil.copyfile(ICON_FILE, icon_path)
+			print("🖼️ Updated server icon")
+
 
 def install_server(server_id, server_config, manifest):
 	print(f"Installing {server_id}...")
@@ -256,14 +265,7 @@ def install_server(server_id, server_config, manifest):
 	update_ops(server_dir, server_config.get("ops", []))
 	update_banned_players(server_dir, server_config.get("banned_players", []))
 	update_banned_ips(server_dir, server_config.get("banned_ips", []))
-
-	icon_path = os.path.join(server_dir, ICON_FILE)
-	if os.path.exists(ICON_FILE):
-		if os.path.exists(icon_path):
-			print("✅ Server icon already matches")
-		else:
-			shutil.copyfile(ICON_FILE, icon_path)
-			print("🖼️ Updated server icon")
+	update_server_icon(server_dir)
 
 	print(f"Installed {server_id} ({version_id})")
 
