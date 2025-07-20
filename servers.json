@@ -4,10 +4,10 @@
     "version": "latest:release",
     "eula": false,
     "properties": {
-	"difficulty": "normal",
-	"allow-flight": true,
-	"enable-command-block": true,
-	"white-list": true,
+        "difficulty": "normal",
+        "allow-flight": true,
+        "enable-command-block": true,
+        "white-list": true,
         "motd": "\u00a7dA Cool Minecraft Server"
     },
     "whitelist": ["SylvanSerenity", "awesomeis9"],
