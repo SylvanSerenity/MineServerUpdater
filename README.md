@@ -25,11 +25,11 @@ MineServerUpdater is a Minecraft server manager and updater that allows you to s
 
     ---
 
-2. **Install dependencies (screen, python3, python3-venv, python3-pip):**
+2. **Install dependencies (screen, python3, python3-venv):**
 
     ```sh
     sudo apt update
-    sudo apt install -y screen python3 python3-venv python3-pip
+    sudo apt install -y screen python3 python3-venv
     ```
 
     ---
@@ -54,26 +54,21 @@ MineServerUpdater is a Minecraft server manager and updater that allows you to s
 1. **Configure the `servers.json` file for your servers.** See [Configuration](#configuration) for configuration specification.
 
     ```sh
-    nano server.json
+    nano servers.json
     ```
 
     ---
 
-2. **Run the `update.py` script to install/update all servers to match your configuration specified in `servers.json`.**
+2. **Run the `update.sh` script to install/update all servers to match your configuration specified in `servers.json`.**
 
     ```sh
-    python3 update.py
+    chmod +x update.sh
+    ./update.sh
     ```
 
     ---
 
-3. **Navigate to your new server directory and use the `server_manager.sh` script to start your server.** See [Server Manager](#server-manager) for more information, including how to [start the server on system boot](#server-manager-service).
-
-    ```sh
-    ./server_manager.sh
-    ```
-
-4. To automatically update the server information, consider making a cron task:
+3. Consider making a cron task to automatically update the server on a schedule:
 
     ```sh
     chmod +x update.sh
@@ -87,6 +82,14 @@ MineServerUpdater is a Minecraft server manager and updater that allows you to s
     ```
 
     ***Note:** Replace `/home/minecraft/` with the absolute path of the `MineServerUpdater` directory.*
+
+    ---
+
+4. **Navigate to your new server directory and use the `server_manager.sh` script to start your server.** See [Server Manager](#server-manager) for more information, including how to [start the server on system boot](#server-manager-service).
+
+    ```sh
+    ./server_manager.sh
+    ```
 
 ## Configuration
 
