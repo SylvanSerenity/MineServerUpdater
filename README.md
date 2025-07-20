@@ -404,15 +404,7 @@ The `server.cfg` file contains configuration for the actual server startup proce
 
 You can have your Minecraft servers start on boot by creating a service that runs the `server_manager.sh` script. Follow the below steps for each of your servers:
 
-1. **Create the systemd service for all your servers:**
-
-    ```sh
-    sudo nano /etc/systemd/system/minecraft@.service
-    ```
-
-    ---
-
-2. **Create a `minecraft` user (if not already done), and give it ownership of the `install_dir` that you set in the `servers.json` file:**
+1. **Create a `minecraft` user (if not already done), and give it ownership of the `install_dir` that you set in the `servers.json` file:**
 
     ```sh
     sudo useradd -r -m -U -d /home/minecraft -s /bin/bash minecraft
@@ -420,6 +412,14 @@ You can have your Minecraft servers start on boot by creating a service that run
     ```
 
     ***Note:** Replace `/home/minecraft` with the `install_dir` you defined earlier in `servers.json`.*
+
+    ---
+
+2. **Create the systemd service for all your servers:**
+
+    ```sh
+    sudo nano /etc/systemd/system/minecraft@.service
+    ```
 
     ---
 
