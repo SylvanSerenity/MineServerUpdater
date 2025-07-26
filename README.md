@@ -290,7 +290,7 @@ Both the `default` and `servers` objects take the following server configuration
 
   ```json
   "server_config": {
-    "args": "-Xms 1G -Xmx 8G",
+    "args": "-Xms1G -Xmx8G",
     "stop": false
   }
   ```
@@ -317,7 +317,7 @@ Here is a complete working example of the `servers.json` configuration:
     "banned_players": ["Notch"],
     "banned_ips": ["1.1.1.1"],
     "server_config": {
-        "args": "-Xms 1G -Xmx 8G",
+        "args": "-Xms1G -Xmx8G",
         "stop": false
     }
   },
@@ -362,7 +362,7 @@ Here is a complete working example of the `servers.json` configuration:
 
 ## Server Manager
 
-The `server_manager.sh` script is found in every server's installation directory. It opens a screen session and continues to restart the server until the `server.cfg` is updated with `stop=true`.
+The `server_manager.sh` script is found in every server's installation directory. It runs the server with the config from `server.cfg`.
 
 ***Note:** This script is intended to run as a service on system boot. See [Server Manager Service](#server-manager-service) for more information.*
 
@@ -370,19 +370,21 @@ The `server_manager.sh` script is found in every server's installation directory
 
 The `server.cfg` file contains configuration for the actual server startup process, including server arguments and whether the server should be stopped. The settings are as follows:
 
-* `args`: The arguments to run the server with, such as memory.
+* `args`: The arguments to run the JVM runtime with, such as memory.
 
   Example:
 
   ```cfg
-  args=-Xms 1G -Xmx 8G
+  args=-Xms1G -Xmx8G
   ```
 
-  ***NOTE:** `nogui` is already added by default and adding it again will have no effect.*
+  ***NOTE:** `nogui` is already added to the server by default and adding it again will have no effect.*
+
+  ***NOTE:** These are JVM args, not Minecraft args.*
 
     ---
 
-* `stop`: Whether the `server_manager.sh` script should stop. If it is set to `false`, the script will start the server on boot and continue restarting the server until this value is updated.
+* `stop`: Whether the `server_manager.sh` script should stop. The script will start the server on boot unless this value is `true`.
 
   Example:
 

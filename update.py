@@ -259,7 +259,7 @@ def update_server_cfg(server_dir, config):
 	if updated or not os.path.exists(path):
 		with open(path, "w") as f:
 			f.write("# The arguments to add when running the server, such as memory allocation.\n")
-			f.write(f"args={current.get('args', '-Xms 1G -Xmx 6G')}\n\n")
+			f.write(f"args={current.get('args', '-Xms1G -Xmx6G')}\n\n")
 			f.write("# Set this to \"true\" to tell the server manager to not (re)start the server until\n")
 			f.write("# you set it back to \"false\". Otherwise, it will continuously restart when closed.\n")
 			f.write(f"stop={current.get('stop', 'false')}\n")
@@ -272,12 +272,12 @@ def copy_server_manager_script(server_dir):
 	if not os.path.exists("server_manager.sh"):
 		print("⚠️ Missing server_manager.sh")
 		return
-	if not os.path.exists(dst):
+	if not os.path.exists(dst) or (sha1sum(dst) != sha1sum("server_manager.sh")):
 		shutil.copy("server_manager.sh", dst)
 		os.chmod(dst, 0o755) # Make executable
 		print("📂 Copied server_manager.sh")
 	else:
-		print("✅ server_manager.sh already present")
+		print("✅ Same version of server_manager.sh is already present")
 
 def install_server(server_id, server_config, manifest):
 	print(f"Installing {server_id}...")

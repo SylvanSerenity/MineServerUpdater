@@ -7,21 +7,9 @@ Before=minecraft-handler.service
 Type=forking
 User=minecraft
 WorkingDirectory=/home/minecraft/%i
-ExecStart=/usr/bin/screen -dmS %i /home/minecraft/%i/server_manager.sh
+ExecStart=/usr/bin/screen -dmS %i bash /home/minecraft/%i/server_manager.sh
 ExecStop=/usr/bin/screen -S %i -X stuff "stop$(printf \\r)"
-ExecStop=/bin/bash -c ' \
-  timeout=30; \
-  while screen -list | grep -q "\.%i"; do \
-    sleep 1; \
-    timeout=$((timeout - 1)); \
-    if [ "$timeout" -le 0 ]; then \
-      echo "Timeout reached, force quitting screen."; \
-      screen -S %i -X quit; \
-      break; \
-    fi \
-  done
-'
-PIDFile=/run/minecraft-%i.pid
+ExecStop=/bin/bash -c 'timeout=30; while screen -list | grep -q "\\.%i"; do sleep 1; timeout=$((timeout - 1)); if [ "$timeout" -le 0 ]; then echo "Timeout reached, force quitting screen."; screen -S %i -X quit; break; fi; done'
 RemainAfterExit=yes
 
 [Install]

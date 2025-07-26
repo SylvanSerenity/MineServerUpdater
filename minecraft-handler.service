@@ -6,13 +6,7 @@ After=local-fs.target
 Type=oneshot
 RemainAfterExit=yes
 ExecStart=/bin/bash -c 'echo "Minecraft handler ready."'
-ExecStop=/bin/bash -c '
-  for srv in $(systemctl list-units --type=service --no-legend | grep "minecraft@" | cut -d" " -f1); do
-    echo "Stopping $srv...";
-    systemctl stop "$srv" &
-  done
-  wait
-'
+ExecStop=/bin/bash -c ExecStop=/bin/bash -c 'for srv in $(systemctl list-units --type=service --no-legend | grep "minecraft@" | cut -d" " -f1); do echo "Stopping $srv..."; systemctl stop "$srv" & done; wait'
 
 [Install]
 WantedBy=multi-user.target
