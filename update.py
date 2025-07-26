@@ -249,17 +249,17 @@ def update_server_cfg(server_dir, config):
 				current[key.strip()] = val.strip()
 
 	updated = False
-	for key in ("xms", "xmx", "stop"):
-		if key in config and str(config[key]) != current.get(key):
+	for key in ("args", "stop"):
+		if key not in config:
+			updated = True
+		elif str(config[key]) != current.get(key):
 			current[key] = str(config[key])
 			updated = True
 
 	if updated or not os.path.exists(path):
 		with open(path, "w") as f:
-			f.write("# The initial heap memory size for the JVM running the server.\n")
-			f.write(f"xms={current.get('xms', '1G')}\n\n")
-			f.write("# The maximum heap memory size for the JVM running the server.\n")
-			f.write(f"xmx={current.get('xmx', '6G')}\n\n")
+			f.write("# The arguments to add when running the server, such as memory allocation.\n")
+			f.write(f"args={current.get('args', '-Xms 1G -Xmx 6G')}\n\n")
 			f.write("# Set this to \"true\" to tell the server manager to not (re)start the server until\n")
 			f.write("# you set it back to \"false\". Otherwise, it will continuously restart when closed.\n")
 			f.write(f"stop={current.get('stop', 'false')}\n")

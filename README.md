@@ -435,7 +435,7 @@ You can have your Minecraft servers start on boot by creating a service that run
     RemainAfterExit=true
     User=minecraft
     WorkingDirectory=/home/minecraft/%i
-    ExecStart=/usr/bin/screen -S %i -dm /home/minecraft/%i/server_manager.sh
+    ExecStart=/usr/bin/screen -dmS %i -c "/home/minecraft/%i/server_manager.sh"
 
     [Install]
     WantedBy=multi-user.target
