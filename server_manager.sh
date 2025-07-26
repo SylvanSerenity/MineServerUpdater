@@ -2,8 +2,6 @@
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 PARENT_DIR=$(dirname "$SCRIPT_DIR")
-
-SCREEN_NAME=$(basename "$PARENT_DIR")
 JAR_FILE="$PARENT_DIR/server.jar"
 CONFIG_FILE="$PARENT_DIR/server.cfg"
 
@@ -11,16 +9,9 @@ CONFIG_FILE="$PARENT_DIR/server.cfg"
 if [ ! -f "$CONFIG_FILE" ]; then
   cat > "$CONFIG_FILE" <<EOF
 stop=false
-xms=1G
-xmx=2G
+args=-Xms1G -Xmx6G
 EOF
   echo "Created default $CONFIG_FILE"
-fi
-
-# Don't start if session already exists
-if screen -list | grep -qw "\.${SCREEN_NAME}"; then
-  echo "Screen session '$SCREEN_NAME' is already running."
-  exit 0
 fi
 
 while true; do

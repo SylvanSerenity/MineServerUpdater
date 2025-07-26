@@ -290,8 +290,7 @@ Both the `default` and `servers` objects take the following server configuration
 
   ```json
   "server_config": {
-    "xms": "2G",
-    "xmx": "8G",
+    "args": "-Xms 1G -Xmx 8G",
     "stop": false
   }
   ```
@@ -318,9 +317,8 @@ Here is a complete working example of the `servers.json` configuration:
     "banned_players": ["Notch"],
     "banned_ips": ["1.1.1.1"],
     "server_config": {
-      "xms": "2G",
-      "xmx": "8G",
-      "stop": false
+        "args": "-Xms 1G -Xmx 8G",
+        "stop": false
     }
   },
   "servers": [
@@ -370,25 +368,17 @@ The `server_manager.sh` script is found in every server's installation directory
 
 ### Server Manager Configuration
 
-The `server.cfg` file contains configuration for the actual server startup process, including memory settings and whether the server should be stopped. The settings are as follows:
+The `server.cfg` file contains configuration for the actual server startup process, including server arguments and whether the server should be stopped. The settings are as follows:
 
-* `xms`: The initial heap memory size (RAM) for the JVM running the server.
-
-  Example:
-
-  ```cfg
-  xms=1024M
-  ```
-
-    ---
-
-* `xmx`: The maximum heap memory size (RAM) for the JVM running the server.
+* `args`: The arguments to run the server with, such as memory.
 
   Example:
 
   ```cfg
-  xmx=8G
+  args=-Xms 1G -Xmx 8G
   ```
+
+  ***NOTE:** `nogui` is already added by default and adding it again will have no effect.*
 
     ---
 
@@ -415,41 +405,32 @@ You can have your Minecraft servers start on boot by creating a service that run
 
     ---
 
-2. **Create the systemd service for all your servers:**
+2. **Ensure the service is configured with your user and install directory:**
 
     ```sh
-    sudo nano /etc/systemd/system/minecraft@.service
-    ```
-
-    ---
-
-3. **Paste the following into the service file:**
-
-    ```ini
-    [Unit]
-    Description=Minecraft Server in %i
-    After=network.target
-
-    [Service]
-    Type=oneshot
-    RemainAfterExit=true
-    User=minecraft
-    WorkingDirectory=/home/minecraft/%i
-    ExecStart=/usr/bin/screen -dmS %i -c "/home/minecraft/%i/server_manager.sh"
-
-    [Install]
-    WantedBy=multi-user.target
+    nano minecraft@.service
     ```
 
     ***Note:** Replace `/home/minecraft/` with the absolute path defined by your `install_dir`.*
 
     ---
 
-4. **Enable the service on system boot and start it:**
+3. **Move the service files to the systemd directory:**
+
+    ```sh
+    sudo mv minecraft@.service /etc/systemd/system/
+    sudo mv minecraft-handler.service /etc/systemd/system/
+    ```
+
+    ---
+
+4. **Enable the services on system boot and start it:**
 
     ```sh
     sudo systemctl daemon-reload
+    sudo systemctl enable minecraft-handler
     sudo systemctl enable minecraft@my-server
+    sudo systemctl start minecraft-handler
     sudo systemctl start minecraft@my-server
     ```
 
@@ -459,13 +440,14 @@ You can have your Minecraft servers start on boot by creating a service that run
 
     ---
 
-5. **Check the status of the service:**
+5. **Check the status of the services:**
 
    ```sh
+   sudo systemctl status minecraft-handler
    sudo systemctl status minecraft@my-server
    ```
 
-   To prevent it from starting at boot:
+   To prevent a server from starting at boot:
 
    ```sh
    sudo systemctl disable minecraft@my-server
