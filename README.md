@@ -189,7 +189,7 @@ Both the `default` and `servers` objects take the following server configuration
   Example:
 
   ```json
-  "id": "my-server"
+  { "id": "my-server" }
   ```
 
   ***Note:** `default` does not take an `id` object.*
@@ -207,7 +207,7 @@ Both the `default` and `servers` objects take the following server configuration
   Example:
 
   ```json
-  "version": "1.6.4"
+  { "version": "1.6.4" }
   ```
 
   ---
@@ -217,7 +217,7 @@ Both the `default` and `servers` objects take the following server configuration
   Example:
 
   ```json
-  "eula": true
+  { "eula": true }
   ```
 
   ***Note:** This is set to false by default to adhere to Minecraft's terms of service. You will have to manually edit this to true in your `servers.json` file.*
@@ -229,12 +229,14 @@ Both the `default` and `servers` objects take the following server configuration
   Example:
 
   ```json
-  "properties": {
-    "difficulty": "normal",
-    "allow-flight": true,
-    "enable-command-block": true,
-    "white-list": true,
-    "motd": "\u00a7dA Cool Minecraft Server"
+  {
+    "properties": {
+      "difficulty": "normal",
+      "allow-flight": true,
+      "enable-command-block": true,
+      "white-list": true,
+      "motd": "\u00a7dA Cool Minecraft Server"
+    }
   }
   ```
 
@@ -247,7 +249,7 @@ Both the `default` and `servers` objects take the following server configuration
   Example:
 
   ```json
-  "whitelist": ["YourUsername", "Notch"]
+  { "whitelist": ["YourUsername", "Notch"] }
   ```
 
   ***Note:** You will also need to set the `white-list` server property to `true` for the whitelist to take effect.*
@@ -259,7 +261,7 @@ Both the `default` and `servers` objects take the following server configuration
   Example:
 
   ```json
-  "ops": ["YourUsername", "Notch"]
+  { "ops": ["YourUsername", "Notch"] }
   ```
 
   ---
@@ -269,7 +271,7 @@ Both the `default` and `servers` objects take the following server configuration
   Example:
 
   ```json
-  "banned_players": ["EvildoerUsername", "Notch"]
+  { "banned_players": ["EvildoerUsername", "Notch"] }
   ```
 
   ---
@@ -279,7 +281,7 @@ Both the `default` and `servers` objects take the following server configuration
   Example:
 
   ```json
-  "banned_ips": ["1.1.1.1", "8.8.8.8"]
+  { "banned_ips": ["1.1.1.1", "8.8.8.8"] }
   ```
 
   ---
@@ -289,9 +291,11 @@ Both the `default` and `servers` objects take the following server configuration
   Example:
 
   ```json
-  "server_config": {
-    "args": "-Xms1G -Xmx8G",
-    "stop": false
+  {
+    "server_config": {
+      "args": "-Xms1G -Xmx8G",
+      "stop": false
+    }
   }
   ```
 
